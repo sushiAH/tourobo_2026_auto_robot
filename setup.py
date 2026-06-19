@@ -1,4 +1,6 @@
 from setuptools import find_packages, setup
+import os
+from glob import glob
 
 package_name = 'tourobo_2026_auto_robot'
 
@@ -8,8 +10,12 @@ setup(
     packages=find_packages(exclude=['test']),
     data_files=[
         ('share/ament_index/resource_index/packages',
-            ['resource/' + package_name]),
+         ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        (os.path.join("share", package_name, "launch"), glob("launch/*.py")),
+        (os.path.join("share", package_name, "config"), glob("config/*.yaml")),
+        (os.path.join("share", package_name, "map"), glob("map/*")),
+        (os.path.join("share", package_name, "path"), glob("path/*")),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -18,12 +24,13 @@ setup(
     description='TODO: Package description',
     license='TODO: License declaration',
     extras_require={
-        'test': [
-            'pytest',
-        ],
+        'test': ['pytest',],
     },
     entry_points={
         'console_scripts': [
+            "subscribe_twist_node = tourobo_2026_auto_robot.subscribe_twist_node:main",
+            "joy2twist_node = tourobo_2026_auto_robot.joy2twist_node:main",
+            "publish_odometory_node = tourobo_2026_auto_robot.publish_odometory_node:main",
         ],
     },
 )
