@@ -51,10 +51,6 @@ class feedback_publisher(Node):
         # --- publisherの設定 ---
         self.imu_pub = self.create_publisher(Imu, "imu/data", 10)
         self.odom_pub = self.create_publisher(Odometry, "odom", 10)
-        self.tof1_pub = self.create_publisher(UInt16, "/tof_1", 10)
-        self.tof2_pub = self.create_publisher(UInt16, "/tof_2", 10)
-        self.tof3_pub = self.create_publisher(UInt16, "/tof_3", 10)
-        self.tof4_pub = self.create_publisher(UInt16, "/tof_4", 10)
 
         # recv_feedbackの割り込み設定
         self.recv_feedback_timer = self.create_timer(0.007, self.recv_feedback)
@@ -77,11 +73,6 @@ class feedback_publisher(Node):
         self.ang_y_vel = 0.0
         self.ang_z_vel = 0.0
 
-        self.tof1 = 0
-        self.tof2 = 0
-        self.tof3 = 0
-        self.tof4 = 0
-
         self.last_time = self.get_clock().now()
 
         # ---- Params -----
@@ -92,23 +83,6 @@ class feedback_publisher(Node):
         current_time = self.get_clock().now()
         dt = (current_time - self.last_time).nanoseconds / 1e9
         self.last_time = current_time
-
-        # tofの配信
-        tof1_msg = UInt16()
-        tof1_msg.data = int(self.tof1)
-        self.tof1_pub.publish(tof1_msg)
-
-        tof2_msg = UInt16()
-        tof2_msg.data = int(self.tof2)
-        self.tof2_pub.publish(tof2_msg)
-
-        tof3_msg = UInt16()
-        tof3_msg.data = int(self.tof3)
-        self.tof3_pub.publish(tof3_msg)
-
-        tof4_msg = UInt16()
-        tof4_msg.data = int(self.tof4)
-        self.tof4_pub.publish(tof4_msg)
 
         # odomの配信
         odom = Odometry()
@@ -267,9 +241,8 @@ class feedback_publisher(Node):
         self.imu_pub.publish(imu)
 
         # tfはsensor fusionパッケージで出力する
-
     def recv_feedback(self):
-        struct_format = "<BIfffffffffHHHHB"
+        struct_format = "<BIfffffffffB"
         packet = receive_packet(struct_format, self.ser)
         if packet is None:
             return
@@ -287,12 +260,6 @@ class feedback_publisher(Node):
 
         self.enc_x_vel = packet[9]  #[rot/s]
         self.enc_y_vel = packet[10]
-
-        self.tof1 = packet[11]  #前方
-        self.tof2 = packet[12]
-        self.tof3 = packet[13]
-
-        self.tof4 = packet[14]  #後方
 
         self.publish_feedback()
 

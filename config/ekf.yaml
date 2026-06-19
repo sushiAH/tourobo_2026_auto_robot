@@ -1,0 +1,51 @@
+### ekf.yaml ###
+ekf_filter_node:
+  ros__parameters:
+    frequency: 100.0       # フィルタの更新頻度 (Hz)
+    two_d_mode: true      # 2DロボットなのでTrue (Z軸, Roll, Pitchを無視)
+    publish_tf: true      # odom -> base_link のTFを配信する
+    listens_to_initialpose: true
+
+    # フレーム設定
+    map_frame: map
+    odom_frame: odom
+    base_link_frame: base_link
+    world_frame: odom     # odomフレームを基準にする
+
+    # --- オドメトリ設定 (/odom) ---
+    # Pythonノードが出力しているトピック名に合わせてください
+    odom0: /odom
+    
+    # [x, y, z, 
+    #  roll, pitch, yaw, 
+    #  vx, vy, vz, 
+    #  vroll, vpitch, vyaw, 
+    #  ax, ay, az]
+    
+    # vx,vyのみ
+    odom0_config: [false, false, false,
+                   false, false, false,
+                   true,  true,  false,
+                   false, false, false,
+                   false, false, false]
+                   
+    # オドメトリの共分散を使用するか (Python側で設定したのでtrue推奨)
+    odom0_differential: false
+    odom0_queue_size: 10
+
+    imu0: /imu/data
+    # --- IMU設定 (/imu/data) ---
+    
+    # yawとvyawのみ
+    imu0_config: [false, false, false,
+                  false, false, true,
+                  false, false, false,
+                  false, false, true,
+                  false,  false, false] 
+                  
+    imu0_differential: true
+    imu0_relative: false
+    imu0_queue_size: 10
+    
+    # IMUの加速度から重力を除去するか
+    imu0_remove_gravitational_acceleration: true

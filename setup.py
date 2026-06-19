@@ -30,7 +30,7 @@ setup(
         'console_scripts': [
             "subscribe_twist_node = tourobo_2026_auto_robot.subscribe_twist_node:main",
             "joy2twist_node = tourobo_2026_auto_robot.joy2twist_node:main",
-            "publish_odometory_node = tourobo_2026_auto_robot.publish_odometory_node:main",
+            "publish_odometry_node = tourobo_2026_auto_robot.publish_odometry_node:main",
         ],
     },
 )

@@ -50,11 +50,6 @@ class TwistSubscriber(Node):
         set_enc_vel_mode(0x012, bus)
         set_enc_vel_mode(0x013, bus)
 
-        set_vel_pid_gain(0x010, 20, 4000, 0, bus)
-        set_vel_pid_gain(0x011, 20, 4000, 0, bus)
-        set_vel_pid_gain(0x012, 20, 4000, 0, bus)
-        set_vel_pid_gain(0x013, 20, 4000, 0, bus)
-
         self.subscription_twist = self.create_subscription(
             Twist,  # メッセージの型
             "/cmd_vel",  # 購読するトピック名
